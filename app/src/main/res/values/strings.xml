@@ -6,9 +6,11 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <string name="test_text_view">TASK HEADING</string>
-
+    <string name="test_text_view">Title :</string>
+    <string name="description_text_view">Description :</string>
+    <string name="due_date">Select Due Date : </string>
     <string name="save_button">Save</string>
+    <string name="cancel_button">Cancel</string>
     <string name="todoList">T0DoLIST</string>
     <string name="delete_button">DEL</string>
 </resources>
