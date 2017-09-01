@@ -14,13 +14,16 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.cerner.a2do.R;
 import com.cerner.a2do.adapter.CustomListAdapter;
 import com.cerner.a2do.adapter.ToDoListCursorAdapter;
 import com.cerner.a2do.contentProvider.ToDoListContract;
 import com.cerner.a2do.database.ToDoListSQLiteOpenHelper;
+import com.cerner.a2do.interfaceListeners.ListItemClickListener;
 import com.cerner.a2do.util.NotifyingAsyncQueryHandler;
 
 import java.util.ArrayList;
@@ -29,7 +32,7 @@ import java.util.Locale;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class ListActivityFragment extends Fragment implements NotifyingAsyncQueryHandler.AsyncQueryListener, LoaderManager.LoaderCallbacks<Cursor> {
+public class ListActivityFragment extends Fragment implements NotifyingAsyncQueryHandler.AsyncQueryListener, LoaderManager.LoaderCallbacks<Cursor>, AdapterView.OnItemClickListener, ListItemClickListener{
     private CustomListAdapter customListAdapter;
     protected ToDoListCursorAdapter cursorAdapter;
     private ListView listView;
@@ -57,7 +60,7 @@ public class ListActivityFragment extends Fragment implements NotifyingAsyncQuer
         ArrayList<String> arrayList = new ArrayList<String>();
         View rootView = inflater.inflate(R.layout.fragment_list, container, false);
         listView = rootView.findViewById(R.id.list_view);
-        cursorAdapter = new ToDoListCursorAdapter(getContext(), null, 0);
+        cursorAdapter = new ToDoListCursorAdapter(getContext(), null, 0, this);
         arrayList.add(getTag());
         customListAdapter = new CustomListAdapter(getContext(), getTag(), arrayList);
         listView.setAdapter(cursorAdapter);
@@ -168,5 +171,19 @@ public class ListActivityFragment extends Fragment implements NotifyingAsyncQuer
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         cursorAdapter.changeCursor(null);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+    }
+
+    @Override
+    public void onDeleteClicked(View view, Cursor cursor) {
+        Toast.makeText(getContext(), "ItemClicked", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onCardViewClicked(View view, Cursor cursor) {
+        Toast.makeText(getContext(), "CardviewClicked", Toast.LENGTH_LONG).show();
     }
 }
