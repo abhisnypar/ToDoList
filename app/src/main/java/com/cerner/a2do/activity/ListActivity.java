@@ -15,6 +15,9 @@ import com.cerner.a2do.database.ToDoListSQLiteOpenHelper;
 import com.cerner.a2do.fragment.AddItemFragment;
 import com.cerner.a2do.fragment.ListActivityFragment;
 
+/*
+* This Activity displays the to do items in the list view*/
+
 public class ListActivity extends AppCompatActivity {
 
     @Override

@@ -3,9 +3,8 @@ package com.cerner.a2do.contentProvider;
 import android.content.ContentValues;
 
 /**
- * Created by c15333 on 8/31/17.
+ * This class saves the content values to the database
  */
-
 public class ToDoListContentValueFactory {
 
     private ToDoListContentValueFactory() {

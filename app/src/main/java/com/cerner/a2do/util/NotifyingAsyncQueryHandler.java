@@ -7,6 +7,10 @@ import android.net.Uri;
 
 import java.lang.ref.WeakReference;
 
+/*
+* This is a custom asynchronous handler which carries Insert, Update and Delete operations in a
+* separate handler thread asynchronously
+* */
 public class NotifyingAsyncQueryHandler extends AsyncQueryHandler {
     private WeakReference<AsyncQueryListener> mListener;
 

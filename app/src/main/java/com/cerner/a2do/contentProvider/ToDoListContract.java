@@ -5,7 +5,7 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 /**
- * Created by c15333 on 8/31/17.
+ * This class helps in creating URI, database tables and columns
  */
 
 @SuppressWarnings("Since15")
