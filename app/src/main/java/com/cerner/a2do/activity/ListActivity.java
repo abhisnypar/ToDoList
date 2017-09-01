@@ -1,13 +1,19 @@
-package com.cerner.a2do;
+package com.cerner.a2do.activity;
 
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+
+import com.cerner.a2do.R;
+import com.cerner.a2do.database.ToDoListSQLiteOpenHelper;
+import com.cerner.a2do.fragment.AddItemFragment;
+import com.cerner.a2do.fragment.ListActivityFragment;
 
 public class ListActivity extends AppCompatActivity {
 
@@ -22,10 +28,12 @@ public class ListActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                onFloatingButtonClicked(view);
             }
         });
+        ListActivityFragment listActivityFragment = new ListActivityFragment();
+        getSupportFragmentManager().beginTransaction().add(R.id.list_fragment_activity, listActivityFragment).commit();
+
     }
 
     @Override
@@ -48,5 +56,20 @@ public class ListActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * On Floating button clicked.
+     *
+     * @param view
+     */
+    public void onFloatingButtonClicked(View view) {
+        AddItemFragment addItemFragment = new AddItemFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.list_fragment_activity, addItemFragment).addToBackStack(null).commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }
