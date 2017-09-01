@@ -22,10 +22,10 @@
     </android.support.design.widget.AppBarLayout>
 
     <FrameLayout
-        android:padding="@dimen/divider_padding"
         android:id="@+id/list_fragment_activity"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/margin_top" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
