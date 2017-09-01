@@ -7,9 +7,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.cerner.a2do.contentProvider.ToDoListContract;
 
 /**
- * Created by c15333 on 8/31/17.
+ *This is a custom SQLite helper class to create and upgrade the database
  */
-
 public class ToDoListSQLiteOpenHelper extends SQLiteOpenHelper {
     public ToDoListSQLiteOpenHelper(Context context) {
         super(context, "todo_list", null, 1);

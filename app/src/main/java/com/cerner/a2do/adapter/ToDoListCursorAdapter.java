@@ -16,9 +16,8 @@ import com.cerner.a2do.contentProvider.ToDoListContract;
 import com.cerner.a2do.interfaceListeners.ListItemClickListener;
 
 /**
- * Created by c15333 on 8/31/17.
+ * This class provides a cursor to retrieve data from the database
  */
-
 public class ToDoListCursorAdapter extends CursorAdapter {
     Context context;
     private LayoutInflater layoutInflater;
