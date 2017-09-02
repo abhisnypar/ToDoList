@@ -14,6 +14,7 @@
 
     <android.support.v7.widget.CardView
         android:padding="@dimen/listItem_padding"
+        android:background="@drawable/desert"
         android:id="@+id/list_card_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">

@@ -179,7 +179,11 @@ public class ListActivityFragment extends Fragment implements NotifyingAsyncQuer
 
     @Override
     public void onDeleteClicked(View view, Cursor cursor) {
-        Toast.makeText(getContext(), "ItemClicked", Toast.LENGTH_LONG).show();
+        if (cursor != null) {
+            String item = cursor.getString(cursor.getColumnIndex(ToDoListContract.TODO_LIST.TASK_DESCRIPTION));
+            Toast.makeText(getContext(), "ItemClicked", Toast.LENGTH_LONG).show();
+//            asyncQueryHandler.startDelete(INSERT_LIST_TOKEN, null, ToDoListContract.TODO_LIST.CONTENT_URI, , null);
+        }
     }
 
     @Override
