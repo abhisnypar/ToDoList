@@ -14,9 +14,8 @@ import android.support.annotation.Nullable;
 import com.cerner.a2do.database.ToDoListSQLiteOpenHelper;
 
 /**
- * Created by c15333 on 8/31/17.
+ * This class provides the methods to store, update and delete data
  */
-
 public class ToDoListContentProvider extends ContentProvider {
     public static final UriMatcher uri_matcher = new UriMatcher(UriMatcher.NO_MATCH);
 

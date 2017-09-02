@@ -29,6 +29,9 @@ import com.cerner.a2do.database.ToDoListSQLiteOpenHelper;
 import com.cerner.a2do.util.NotifyingAsyncQueryHandler;
 
 /**
+ * This Fragment contains the logic to Add/Edit the title, description and the due date of the to do list
+ *
+ *
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
  * {@link AddItemFragment.OnFragmentInteractionListener} interface
