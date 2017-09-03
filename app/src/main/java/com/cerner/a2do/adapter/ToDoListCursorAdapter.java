@@ -41,7 +41,7 @@ public class ToDoListCursorAdapter extends CursorAdapter {
         if (cursor != null) {
             textView = view.findViewById(R.id.list_item_textView);
             Button button = view.findViewById(R.id.delete_button);
-            String taskDescription = cursor.getString(cursor.getColumnIndex(ToDoListContract.TODO_LIST.TASK_DESCRIPTION));
+            String taskDescription = cursor.getString(cursor.getColumnIndex(ToDoListContract.TODO_LIST.TASK_TITLE));
             textView.setText(taskDescription);
            button.setOnClickListener(new View.OnClickListener() {
                @Override

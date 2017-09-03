@@ -19,14 +19,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CursorAdapter;
+import android.widget.DatePicker;
 import android.widget.EditText;
 
 import com.cerner.a2do.R;
-import com.cerner.a2do.adapter.ToDoListCursorAdapter;
 import com.cerner.a2do.contentProvider.ToDoListContentValueFactory;
 import com.cerner.a2do.contentProvider.ToDoListContract;
 import com.cerner.a2do.database.ToDoListSQLiteOpenHelper;
 import com.cerner.a2do.util.NotifyingAsyncQueryHandler;
+
+import static com.cerner.a2do.fragment.ListActivityFragment.DESCRIPTION_TAG;
+import static com.cerner.a2do.fragment.ListActivityFragment.EDIT_TAG;
 
 /**
  * This Fragment contains the logic to Add/Edit the title, description and the due date of the to do list
@@ -39,15 +42,26 @@ import com.cerner.a2do.util.NotifyingAsyncQueryHandler;
  */
 public class AddItemFragment extends Fragment implements LoaderManager.LoaderCallbacks, NotifyingAsyncQueryHandler.AsyncQueryListener {
     private static final int INSERT_LIST_TOKEN = 1;
+    private static final int TODO_LIST_LOADER = 0;
 
 
     private OnFragmentInteractionListener mListener;
     private AsyncQueryHandler asyncQueryHandler;
     private SQLiteDatabase sqLiteDatabase;
     private SQLiteOpenHelper sqLiteOpenHelper;
+    private EditText titleTextView;
+    private EditText taskDescriptionEditText;
+    private Button cancelButton;
+    private Button saveButton;
+    private DatePicker datePicker;
+
+    public String TASK_TITLE_TEXT;
+    public String TASK_DESCRIPTION_TEXT;
+    public String DUE_DATE;
+    public int ID;
 
     public AddItemFragment() {
-        // Required empty public constructor
+
     }
 
     @Override
@@ -63,32 +77,71 @@ public class AddItemFragment extends Fragment implements LoaderManager.LoaderCal
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_add_item, container, false);
 
-        final EditText editText = rootView.findViewById(R.id.edit_text);
-        Button save_button = rootView.findViewById(R.id.save_button);
-        save_button.setOnClickListener(new View.OnClickListener() {
+        titleTextView = rootView.findViewById(R.id.title_edit_text);
+        taskDescriptionEditText = rootView.findViewById(R.id.description_text);
+        cancelButton = rootView.findViewById(R.id.cancel_button);
+        saveButton = rootView.findViewById(R.id.save_button);
+        datePicker = rootView.findViewById(R.id.date_picker);
+        onClickListeners();
+        if (getTag() != null) {
+            if (getTag().equals("EDITED"))
+                showEditPage();
+        }
+        return rootView;
+    }
+
+    private void showEditPage() {
+        TASK_TITLE_TEXT = getArguments().getString(EDIT_TAG);
+        TASK_DESCRIPTION_TEXT = getArguments().getString(DESCRIPTION_TAG);
+        titleTextView.setText(TASK_TITLE_TEXT);
+        taskDescriptionEditText.setText(TASK_DESCRIPTION_TEXT);
+        ID = getArguments().getInt("ID");
+
+    }
+
+    private void onClickListeners() {
+        saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveButtonOnCLick(view, editText);
+                saveButtonOnCLick();
             }
         });
-        return rootView;
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onCancelButtonClicked();
+            }
+        });
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-//        if (savedInstanceState == null) {
-//            getLoaderManager().initLoader(TODO_LIST_LOADER, null, this);
-//        }
+        if (savedInstanceState == null) {
+            getLoaderManager().initLoader(TODO_LIST_LOADER, null, this);
+        }
     }
 
 
-    private void saveButtonOnCLick(View view, EditText editText) {
-
-        ContentValues contentValues = ToDoListContentValueFactory.newToDoListValues("NEW TASK", editText.getText().toString(), "FRESH", null);
-        asyncQueryHandler.startInsert(INSERT_LIST_TOKEN, null, ToDoListContract.TODO_LIST.CONTENT_URI, contentValues);
+    private void saveButtonOnCLick() {
+        if (titleTextView != null)
+            TASK_TITLE_TEXT = titleTextView.getText().toString();
+        if (taskDescriptionEditText != null)
+            TASK_DESCRIPTION_TEXT = taskDescriptionEditText.getText().toString();
+        if (getTag() != null && getTag().equals("EDITED")) {
+            ContentValues contentValues = ToDoListContentValueFactory.updateToDoList(TASK_TITLE_TEXT, TASK_DESCRIPTION_TEXT, null, null);
+            asyncQueryHandler.startUpdate(INSERT_LIST_TOKEN, null, ToDoListContract.TODO_LIST.CONTENT_URI, contentValues, ToDoListContract.TODO_LIST._ID + " = ? ", new String[]{String.valueOf(ID)});
+        } else {
+            ContentValues contentValues = ToDoListContentValueFactory.newToDoListValues(TASK_TITLE_TEXT, TASK_DESCRIPTION_TEXT, null, null);
+            asyncQueryHandler.startInsert(INSERT_LIST_TOKEN, null, ToDoListContract.TODO_LIST.CONTENT_URI, contentValues);
+        }
     }
 
+
+    private void onCancelButtonClicked() {
+        if (getActivity() != null)
+            getActivity().getSupportFragmentManager().popBackStack();
+    }
 
 //    // TODO: Rename method, update argument and hook method into UI event
 //    public void onButtonPressed(Uri uri) {
@@ -190,18 +243,18 @@ public class AddItemFragment extends Fragment implements LoaderManager.LoaderCal
     @SuppressLint("Recycle")
     @Override
     public void onQueryComplete(int token, Object cookie, Cursor cursor) {
-        sqLiteDatabase = sqLiteOpenHelper.getReadableDatabase();
-        String query = "SELECT COUNT (*)" + "FROM " + ToDoListContract.TODO_LIST.TABLE + "'";
-        cursor = sqLiteDatabase.rawQuery(query, null);
         if (cursor != null) {
             cursor.moveToFirst();
+            titleTextView.setText(TASK_TITLE_TEXT);
+            TASK_DESCRIPTION_TEXT = cursor.getString(cursor.getColumnIndex(ToDoListContract.TODO_LIST.TASK_DESCRIPTION));
+            taskDescriptionEditText.setText(TASK_DESCRIPTION_TEXT);
         }
-
     }
 
     @Override
     public void onUpdateComplete(int token, Object cookie, int result) {
-
+        ListActivityFragment listFragment = new ListActivityFragment();
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.list_fragment_activity, listFragment).commit();
     }
 
     @Override

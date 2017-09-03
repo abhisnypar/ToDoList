@@ -1,6 +1,8 @@
 package com.cerner.a2do.fragment;
 
+import android.app.AlertDialog;
 import android.content.AsyncQueryHandler;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -16,7 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.cerner.a2do.R;
 import com.cerner.a2do.adapter.CustomListAdapter;
@@ -33,6 +34,8 @@ import java.util.Locale;
  * A placeholder fragment containing a simple view.
  */
 public class ListActivityFragment extends Fragment implements NotifyingAsyncQueryHandler.AsyncQueryListener, LoaderManager.LoaderCallbacks<Cursor>, AdapterView.OnItemClickListener, ListItemClickListener{
+    public static String EDIT_TAG = "edit_button";
+    public static String DESCRIPTION_TAG = "description_tag";
     private CustomListAdapter customListAdapter;
     protected ToDoListCursorAdapter cursorAdapter;
     private ListView listView;
@@ -120,7 +123,7 @@ public class ListActivityFragment extends Fragment implements NotifyingAsyncQuer
 
     @Override
     public void onDeleteComplete(int token, Object cookie, int result) {
-
+        cursorAdapter.notifyDataSetChanged();
     }
 
 
@@ -178,16 +181,39 @@ public class ListActivityFragment extends Fragment implements NotifyingAsyncQuer
     }
 
     @Override
-    public void onDeleteClicked(View view, Cursor cursor) {
+    public void onDeleteClicked(View view, final Cursor cursor) {
         if (cursor != null) {
-            String item = cursor.getString(cursor.getColumnIndex(ToDoListContract.TODO_LIST.TASK_DESCRIPTION));
-            Toast.makeText(getContext(), "ItemClicked", Toast.LENGTH_LONG).show();
-//            asyncQueryHandler.startDelete(INSERT_LIST_TOKEN, null, ToDoListContract.TODO_LIST.CONTENT_URI, , null);
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
+            alertDialog.setTitle(R.string.delete_dialog_title);
+            alertDialog.setMessage(R.string.delete_dialog_message);
+            alertDialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    String item = cursor.getString(cursor.getColumnIndex(ToDoListContract.TODO_LIST.TASK_TITLE));
+                    asyncQueryHandler.startDelete(INSERT_LIST_TOKEN, null, ToDoListContract.TODO_LIST.CONTENT_URI, ToDoListContract.TODO_LIST.TASK_TITLE + " = ? ", new String[]{item});
+
+                }
+            });
+            alertDialog.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
+            alertDialog.setCancelable(false);
+            alertDialog.create().show();
+
         }
     }
 
     @Override
     public void onCardViewClicked(View view, Cursor cursor) {
-        Toast.makeText(getContext(), "CardviewClicked", Toast.LENGTH_LONG).show();
+        AddItemFragment addItemFragment = new AddItemFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("ID", cursor.getInt(cursor.getColumnIndex(ToDoListContract.TODO_LIST._ID)));
+        bundle.putString(EDIT_TAG, cursor.getString(cursor.getColumnIndex(ToDoListContract.TODO_LIST.TASK_TITLE)));
+        bundle.putString(DESCRIPTION_TAG, cursor.getString(cursor.getColumnIndex(ToDoListContract.TODO_LIST.TASK_DESCRIPTION)));
+        addItemFragment.setArguments(bundle);
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.list_fragment_activity, addItemFragment, "EDITED").commit();
     }
 }

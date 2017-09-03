@@ -98,7 +98,20 @@ public class ToDoListContentProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        return 0;
+        int affected;
+        switch (uri_matcher.match(uri)) {
+            case TODO_LIST:
+                affected = sqLiteOpenHelper
+                        .getWritableDatabase()
+                        .delete(ToDoListContract.TODO_LIST.TABLE,
+                                selection,
+                                selectionArgs);
+                contentResolver.notifyChange(uri, null, false);
+                break;
+            default:
+                throw new IllegalArgumentException(String.format("Unknown uri: %s", uri));
+        }
+        return affected;
     }
 
     @Override

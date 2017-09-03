@@ -35,7 +35,7 @@ public class ToDoListContract {
                 TASK_TITLE + " TEXT NOT NULL, " +
                 TASK_DESCRIPTION + " TEXT NOT NULL, " +
                 TASK_TYPE + " TEXT, " +
-                TASK_STATUS + " TEXT NOT NULL" +
+                TASK_STATUS + " TEXT" +
                 ")";
 
         public static final String[] LIST_PROJECTION = new String[]{

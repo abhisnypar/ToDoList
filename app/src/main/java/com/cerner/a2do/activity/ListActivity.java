@@ -1,7 +1,5 @@
 package com.cerner.a2do.activity;
 
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -11,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.cerner.a2do.R;
-import com.cerner.a2do.database.ToDoListSQLiteOpenHelper;
 import com.cerner.a2do.fragment.AddItemFragment;
 import com.cerner.a2do.fragment.ListActivityFragment;
 
@@ -68,7 +65,7 @@ public class ListActivity extends AppCompatActivity {
      */
     public void onFloatingButtonClicked(View view) {
         AddItemFragment addItemFragment = new AddItemFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.list_fragment_activity, addItemFragment).addToBackStack(null).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.list_fragment_activity, addItemFragment, null).addToBackStack(null).commit();
     }
 
     @Override
